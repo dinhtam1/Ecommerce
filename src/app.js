@@ -7,6 +7,9 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
 
+// test commit
+console.log('Test commit');
+
 // Sử dụng body-parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
