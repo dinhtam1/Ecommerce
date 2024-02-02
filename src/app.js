@@ -7,8 +7,6 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
 
-// test commit
-console.log('Test commit');
 
 // Sử dụng body-parser middleware
 app.use(bodyParser.json());
@@ -24,4 +22,20 @@ require('./dbs/init.mongodb')
 
 // Init routes
 app.use('/' , require('./routes'))
+
+// Handling errors
+app.use((req, res, next) => {
+    const error = new Error('Not Found');
+    error.status = 404;
+    next(error);
+})
+
+app.use((error, req, res, next) => {
+    const status = error.status || 500;
+    return res.status(status).json({
+        status : 'error',
+        code : status,
+        message : error.message || 'Internal Server Error'
+    })
+})
 module.exports = app
