@@ -1,15 +1,21 @@
 const keytokenModel = require('../models/keytoken.model')
 
 class KeyTokenSerivce {
-    static createKeyToken = async({userId, publicKey, privateKey}) => {
+    static createKeyToken = async ({ userId, publicKey, privateKey, refreshToken }) => {
         try {
-            const tokens = await keytokenModel.create({
-                user : userId,
+            const filter = { user: userId }
+            const update = {
                 publicKey,
-                privateKey
-            })
-            console.log("tokens::::::" , tokens.publicKey);
-            return tokens ? tokens.publicKey : null 
+                privateKey,
+                refreshTokenUsed: [],
+                refreshToken
+            }
+            const options = {
+                upsert: true,
+                new: true
+            }
+            const tokens = await keytokenModel.findOneAndUpdate(filter, update, options)
+            return tokens ? tokens.publicKey : null
         } catch (error) {
             return error
         }
